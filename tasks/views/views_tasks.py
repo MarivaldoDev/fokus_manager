@@ -67,6 +67,7 @@ class UpdateTask(UpdateView):
     def form_valid(self, form):
         if not form.has_changed():
             return redirect(self.get_success_url())
+        messages.success(self.request, "Tarefa atualizada com sucesso!")
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -87,6 +88,7 @@ class DeleteTask(DeleteView):
         return get_object_or_404(Task, slug=slug, author=self.request.user)
 
     def get_success_url(self):
+        messages.success(self.request, "Tarefa excluída com sucesso!")
         return reverse("tasks:tasks")
 
 
@@ -123,7 +125,7 @@ def tasks_by_category(request, slug: str):
         elif cd.get("completed") == "no":
             tasks = tasks.filter(completed=False)
 
-    page_obj = pagination(request, tasks, per_page=5)
+    page_obj = pagination(request, tasks, per_page=6)
 
     return render(
         request,
@@ -153,7 +155,7 @@ def task_list(request):
         elif cd.get("completed") == "no":
             tasks = tasks.filter(completed=False)
 
-    page_obj = pagination(request, tasks, per_page=5)
+    page_obj = pagination(request, tasks, per_page=6)
     categories = Category.objects.filter(author=request.user)
 
     return render(

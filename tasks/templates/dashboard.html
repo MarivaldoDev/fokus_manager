@@ -5,9 +5,9 @@
 {% endblock extra_head %}
 
 
-{% include 'partials/messages.html' %}
 
 {% block content %}
+{% include 'partials/messages.html' %}
 <div class="row mb-5 g-4">
     <!-- Profile Card - Compact Version -->
     <div class="col-lg-4">
@@ -106,7 +106,7 @@
     <!-- Stat 2 -->
     <div class="col-12 col-md-4">
         <div class="card bg-info text-white h-100 shadow border-0 rounded-4 p-3 position-relative overflow-hidden hover-scale transition-all">
-            <a href="{% url 'tasks:categories' %}">
+            <a href="{% url 'tasks:categories' %}?filter=incomplete">
                 <div class="card-body">
                     <i class="bi bi-tags position-absolute opacity-25" style="font-size: 6rem; right: -10px; bottom: -20px;"></i>
                     <h6 class="card-subtitle mb-2 text-white-50 fw-semibold text-uppercase tracking-wide">Categorias com Tarefas Abertas</h6>

@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
@@ -29,6 +30,7 @@ class CreateCategory(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        messages.success(self.request, "Categoria criada com sucesso!")
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -65,6 +67,7 @@ class UpdateCategory(UpdateView):
     def form_valid(self, form):
         if not form.has_changed():
             return redirect(self.get_success_url())
+        messages.success(self.request, "Categoria atualizada com sucesso!")
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -85,6 +88,7 @@ class DeleteCategory(DeleteView):
         return get_object_or_404(Category, slug=slug, author=self.request.user)
 
     def get_success_url(self):
+        messages.success(self.request, "Categoria excluída com sucesso!")
         return reverse("tasks:dashboard")
 
 
@@ -99,11 +103,20 @@ def category_list(request):
         )
     ).filter(incomplete_count__gt=0)
 
+    # Determina qual filtro aplicar
+    filter_type = request.GET.get("filter", "incomplete")
+    if filter_type == "all":
+        categories_to_display = all_categories
+    else:
+        categories_to_display = categories_with_tasks_incomplete
+
     return render(
         request,
         "categories.html",
         {
             "all_categories": all_categories,
             "categories_with_tasks_incomplete": categories_with_tasks_incomplete,
+            "categories_to_display": categories_to_display,
+            "filter_type": filter_type,
         },
     )
