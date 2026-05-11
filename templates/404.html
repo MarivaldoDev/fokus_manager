@@ -1,0 +1,76 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <title>Página não encontrada - Task Manager</title>
+{% endblock extra_head %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="text-center">
+        <!-- Ilustração com ícone -->
+        <div class="mb-4">
+            <i class="bi bi-exclamation-triangle display-1 text-warning"></i>
+        </div>
+
+        <!-- Número do erro -->
+        <h1 class="display-1 fw-bold text-dark mb-3">404</h1>
+
+        <!-- Mensagem principal -->
+        <h2 class="fw-bold text-blue mb-2">Página não encontrada</h2>
+        
+        <!-- Descrição -->
+        <p class="lead text-muted mb-4">
+            Desculpe, a página que você está procurando não existe ou foi removida.
+        </p>
+
+        <!-- Motivos comuns -->
+        <div class="row row-cols-1 row-cols-md-3 g-3 mb-5 justify-content-center">
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                    <div class="card-body">
+                        <i class="bi bi-link-45deg text-primary fs-3 mb-2"></i>
+                        <h5 class="card-title">Link quebrado</h5>
+                        <p class="card-text small text-muted">A URL pode estar incorreta</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                    <div class="card-body">
+                        <i class="bi bi-clock-history text-warning fs-3 mb-2"></i>
+                        <h5 class="card-title">Página movida</h5>
+                        <p class="card-text small text-muted">Pode ter sido removida do servidor</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-3 bg-light">
+                    <div class="card-body">
+                        <i class="bi bi-search text-danger fs-3 mb-2"></i>
+                        <h5 class="card-title">Recurso indisponível</h5>
+                        <p class="card-text small text-muted">Verifique se tem permissão</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões de ação -->
+        <div class="d-flex gap-3 justify-content-center mb-4">
+            <a href="/" class="btn btn-primary btn-lg shadow-sm px-5">
+                <i class="bi bi-house-door me-2"></i> Ir para Home
+            </a>
+            <a href="{% url 'tasks:tasks' %}" class="btn btn-outline-primary btn-lg shadow-sm px-5">
+                <i class="bi bi-list-check me-2"></i> Minhas Tarefas
+            </a>
+        </div>
+
+        <!-- Sugestão de busca -->
+        <p class="text-muted">
+            <small>
+                Perdido? Verifique a URL digitada ou <a href="{% url 'tasks:tasks' %}" class="text-primary text-decoration-none">volte para a lista de tarefas</a>.
+            </small>
+        </p>
+    </div>
+</div>
+{% endblock content %}
