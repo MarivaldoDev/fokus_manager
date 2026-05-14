@@ -1,4 +1,5 @@
 import logging
+import threading
 
 from decouple import config
 from django.contrib.auth.models import AbstractUser
@@ -34,10 +35,14 @@ class Author(AbstractUser):
             )
             from_email = config("EMAIL_HOST_USER")
             try:
-                self.email_user(subject, message, from_email)
+                threading.Thread(
+                    target=self.email_user,
+                    args=(subject, message, from_email),
+                ).start()
+
                 logger.info(f"Email de boas-vindas enviado para {self.username}")
+
             except Exception as e:
-                pass
                 logger.error(
                     f"Erro ao enviar email de boas-vindas para {self.username}: {e}"
                 )

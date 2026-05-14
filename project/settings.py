@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [".azurewebsites.net", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = [
     "https://fokusmanager-gyemb8gremhfayb2.centralus-01.azurewebsites.net",
@@ -97,6 +97,16 @@ if DEBUG is False:
             },
         }
     }
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.azure_storage.AzureStorage",
+            "OPTIONS": {
+                "timeout": 20,
+                "expiration_secs": 500,
+            },
+        },
+    }
 else:
     DATABASES = {
         "default": {
@@ -141,6 +151,8 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = (BASE_DIR / "base_static",)
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -148,22 +160,13 @@ LOGGING = LOGGING
 AUTH_USER_MODEL = "authors.Author"
 
 
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.azure_storage.AzureStorage",
-        "OPTIONS": {
-            "timeout": 20,
-            "expiration_secs": 500,
-        },
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
-
 AZURE_CONTAINER = config("AZURE_CONTAINER")
 AZURE_ACCOUNT_NAME = config("AZURE_ACCOUNT_NAME")
 AZURE_ACCOUNT_KEY = config("AZURE_ACCOUNT_KEY")
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
