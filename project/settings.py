@@ -26,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [".azurewebsites.net", "localhost", "127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = [
     "https://fokusmanager-gyemb8gremhfayb2.centralus-01.azurewebsites.net",
 ]
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "project.middleware.AdminStaffOnlyMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -165,9 +166,9 @@ AZURE_CONTAINER = config("AZURE_CONTAINER")
 AZURE_ACCOUNT_NAME = config("AZURE_ACCOUNT_NAME")
 AZURE_ACCOUNT_KEY = config("AZURE_ACCOUNT_KEY")
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

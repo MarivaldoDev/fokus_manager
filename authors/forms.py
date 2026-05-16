@@ -40,8 +40,8 @@ class RegisterForm(forms.ModelForm):
         if not username or not email or not password:
             raise forms.ValidationError("Todos os campos são obrigatórios.")
 
-        elif len(password) < 6:
-            raise forms.ValidationError("A senha deve conter pelo menos 6 caracteres.")
+        elif len(password) < 8:
+            raise forms.ValidationError("A senha deve conter pelo menos 8 caracteres.")
 
         elif Author.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("Esse e-mail já está em uso.")
