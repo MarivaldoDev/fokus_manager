@@ -27,9 +27,14 @@ SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = [".azurewebsites.net", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "fokusmanager.online",
+    "www.fokusmanager.online",
+    "localhost",
+    "127.0.0.1",
+]
 CSRF_TRUSTED_ORIGINS = [
-    "https://fokusmanager-gyemb8gremhfayb2.centralus-01.azurewebsites.net",
+    "https://fokusmanager.online",
 ]
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
