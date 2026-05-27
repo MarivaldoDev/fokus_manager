@@ -20,7 +20,7 @@ class Author(AbstractUser):
 
         if is_new and self.email:
             subject = "Bem-vindo ao Fokus Manager!"
-            dominio = config("DOMAIN_NAME", default="http://localhost:8000")
+            dominio = config("DOMAIN_NAME")
             login_url = reverse("authors:login")
             message = (
                 f"Olá {self.username},\n\n"

@@ -30,8 +30,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "fokusmanager.online",
     "www.fokusmanager.online",
-    "localhost",
-    "127.0.0.1",
+    "2.24.127.235",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://fokusmanager.online",
@@ -56,7 +55,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -104,18 +102,7 @@ if DEBUG is False:
         }
     }
 
-    STORAGES = {
-        "default": {
-            "BACKEND": "storages.backends.azure_storage.AzureStorage",
-            "OPTIONS": {
-                "timeout": 20,
-                "expiration_secs": 500,
-            },
-        },
-        "staticfiles": {
-            "BACKEND": ("whitenoise.storage.CompressedManifestStaticFilesStorage"),
-        },
-    }
+    DATABASES["default"]["CONN_MAX_AGE"] = 60
 else:
     DATABASES = {
         "default": {
@@ -166,10 +153,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGGING = LOGGING
 AUTH_USER_MODEL = "authors.Author"
 
-
-AZURE_CONTAINER = config("AZURE_CONTAINER")
-AZURE_ACCOUNT_NAME = config("AZURE_ACCOUNT_NAME")
-AZURE_ACCOUNT_KEY = config("AZURE_ACCOUNT_KEY")
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
