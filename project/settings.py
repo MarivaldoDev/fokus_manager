@@ -30,7 +30,6 @@ DEBUG = False
 ALLOWED_HOSTS = [
     "fokusmanager.online",
     "www.fokusmanager.online",
-    "2.24.127.235",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://fokusmanager.online",
