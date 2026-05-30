@@ -33,7 +33,9 @@
         {% endfor %}
         {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
         <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        <br><br>
       </form>
+
 
       <div class="auth-links">
         <p class="small muted">Ainda não tem conta? <a href="{% url 'authors:register' %}" class="link">Registre-se</a></p>

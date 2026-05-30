@@ -26,15 +26,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     "fokusmanager.online",
     "www.fokusmanager.online",
+    "127.0.0.1",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://fokusmanager.online",
 ]
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -153,9 +154,9 @@ LOGGING = LOGGING
 AUTH_USER_MODEL = "authors.Author"
 
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
