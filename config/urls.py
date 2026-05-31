@@ -14,5 +14,5 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Handlers de erro personalizados
-handler404 = "project.views.page_not_found"
-handler500 = "project.views.server_error"
+handler404 = "config.views.page_not_found"
+handler500 = "config.views.server_error"
