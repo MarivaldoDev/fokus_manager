@@ -14,3 +14,4 @@ logs/
 media/
 venv/
 staticfiles/
+dump.rdb
