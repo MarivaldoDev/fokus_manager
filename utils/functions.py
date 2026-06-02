@@ -1,9 +1,16 @@
+import logging
+import threading
 from collections import Counter
 from datetime import date, timedelta
 
+from decouple import config
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
+from django.urls import reverse
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 
 def list_errors(request, form):
@@ -81,3 +88,31 @@ def _build_productivity_chart(task_queryset):
             "data": [monthly_counter.get(period, 0) for period in monthly_periods],
         },
     }
+
+
+def welcome_email(username, email):
+    subject = "Bem-vindo ao Fokus Manager!"
+    dominio = config("DOMAIN_NAME", default="http://localhost:8000")
+    login_url = reverse("authors:login")
+    message = (
+        f"Olá {username},\n\n"
+        "Bem-vindo ao Fokus Manager!\n\n"
+        "Sua conta foi criada com sucesso. Para acessar a plataforma, "
+        f"clique no link abaixo:\n\n"
+        f"{dominio}{login_url}\n\n"
+        "Usuário: " + username + "\n\n"
+        "Se você não realizou este cadastro, ignore este e-mail.\n\n"
+        "Atenciosamente,\n"
+        "Equipe do Fokus Manager"
+    )
+    from_email = config("EMAIL_HOST_USER")
+    try:
+        threading.Thread(
+            target=send_mail,
+            args=(subject, message, from_email, [email]),
+        ).start()
+
+        logger.info(f"Email de boas-vindas enviado para {username}")
+
+    except Exception as e:
+        logger.error(f"Erro ao enviar email de boas-vindas para {username}: {e}")

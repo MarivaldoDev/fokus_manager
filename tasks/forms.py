@@ -11,6 +11,7 @@ class TaskForm(forms.ModelForm):
             "description",
             "category",
             "start_date",
+            "deadline",
             "image",
         )
 
@@ -19,6 +20,7 @@ class TaskForm(forms.ModelForm):
             "description": "Descrição",
             "category": "Categoria",
             "start_date": "Data de Início",
+            "deadline": "Prazo de conclusão",
             "image": "Imagem (opcional)",
         }
 
@@ -35,6 +37,9 @@ class TaskForm(forms.ModelForm):
             ),
             "category": forms.Select(attrs={"class": "form-control"}),
             "start_date": forms.DateInput(
+                format="%Y-%m-%d", attrs={"class": "form-control", "type": "date"}
+            ),
+            "deadline": forms.DateTimeInput(
                 format="%Y-%m-%d", attrs={"class": "form-control", "type": "date"}
             ),
             "image": forms.FileInput(
@@ -158,12 +163,28 @@ class TaskFilterForm(forms.Form):
     start_date_from = forms.DateField(
         required=False,
         label="Data início (de)",
-        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+        widget=forms.DateInput(
+            attrs={
+                "type": "text",
+                "class": "form-control",
+                "placeholder": "De",
+                "onfocus": "this.type='date'",
+                "onblur": "if(!this.value) this.type='text'",
+            }
+        ),
     )
     start_date_to = forms.DateField(
         required=False,
         label="Data início (até)",
-        widget=forms.DateInput(attrs={"type": "date", "class": "form-control"}),
+        widget=forms.DateInput(
+            attrs={
+                "type": "text",
+                "class": "form-control",
+                "placeholder": "Até",
+                "onfocus": "this.type='date'",
+                "onblur": "if(!this.value) this.type='text'",
+            }
+        ),
     )
     completed = forms.ChoiceField(
         required=False,

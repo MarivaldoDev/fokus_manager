@@ -1,3 +1,5 @@
+from time import timezone
+
 from autoslug import AutoSlugField
 from django.db import models
 from django.utils.text import slugify
@@ -37,6 +39,7 @@ class Task(models.Model):
     finish_date = models.DateField(blank=True, null=True)
     image = models.ImageField(upload_to="task_images/%Y/%m/", blank=True, null=True)
     completed = models.BooleanField(default=False)
+    deadline = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -46,6 +49,12 @@ class Task(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    @property
+    def is_overdue(self):
+        if self.deadline and not self.completed:
+            return self.deadline < timezone.now()
+        return False
 
     def __str__(self):
         return f"{self.title} - {'Completed' if self.completed else 'Not Completed'}"

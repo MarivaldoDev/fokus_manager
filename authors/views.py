@@ -12,6 +12,7 @@ from utils.functions import list_errors
 
 from .forms import RegisterForm, UpdateRegisterForm
 from .models import Author
+from .tasks import task_welcome_email
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,10 @@ class RegisterView(CreateView):
         messages.success(
             self.request,
             "Seu cadastro foi realizado com sucesso! Faça login para acessar o dashboard.",
+        )
+
+        task_welcome_email.delay(
+            form.cleaned_data["username"], form.cleaned_data["email"]
         )
         return super().form_valid(form)
 
