@@ -19,7 +19,7 @@ def task_deadline_billing() -> None:
         html_message = f"""
 <p>Olá <strong>{task.author.username.upper()}</strong>, você tem uma tarefa atrasada:<br> <strong>{task.title.upper()}</strong>.</p>
 <p>Por favor, acesse o sistema para verificar os detalhes e tomar as medidas necessárias.</p>
-<p>Acesse o sistema: <a href={config("DOMAIN_NAME", default="http://127.0.0.1:8000")}tasks/?completed=overdue>clique aqui</a></p>
+<p>Acesse o sistema: <a href={config("DOMAIN_NAME", default="http://127.0.0.1:8000")}/tasks/?completed=overdue>clique aqui</a></p>
 <p>Atenciosamente,<br>Equipe <strong>Fokus Manager</strong></p>
         """
         send_mail(
