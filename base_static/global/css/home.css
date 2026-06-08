@@ -120,8 +120,8 @@ html[data-theme="dark"] .theme-toggle {
     border-color: rgba(255,255,255,0.04) !important;
 }
 
-/* Utility: make sure badges and small labels are visible */
-html[data-theme="dark"] .badge,
+/* Utility: keep neutral badges readable in dark mode without flattening semantic colors */
+html[data-theme="dark"] .badge:not([class*="bg-"]):not([class*="text-bg-"]),
 html[data-theme="dark"] .badge.bg-light {
     background: color-mix(in srgb, var(--surface-solid) 85%, transparent) !important;
     color: var(--text) !important;
