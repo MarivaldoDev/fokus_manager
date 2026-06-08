@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
     "django_celery_results",
+    "django_celery_beat",
     "tasks",
     "authors",
     "storages",
@@ -120,7 +121,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 LOGGING = LOGGING
 AUTH_USER_MODEL = "authors.Author"
-
 
 DEFAULT_FROM_EMAIL = "teamfokusmanager@gmail.com"
 EMAIL_HOST = config("EMAIL_HOST")

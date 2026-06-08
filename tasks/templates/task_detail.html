@@ -53,7 +53,13 @@
                     <span class="badge bg-light text-dark border px-3 py-2 rounded-pill shadow-sm">
                         <i class="bi bi-calendar-event opacity-75 me-1"></i> Início: {{ task.start_date|date:"d/m/Y"|default:"-" }}
                     </span>
-                    
+
+                    {% if task.deadline %}
+                        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-calendar-event opacity-75 me-1"></i> Prazo: {{ task.deadline|date:"d/m/Y" }}
+                        </span>
+                    {% endif %}
+
                     {% if task.finish_date %}
                     <span class="badge bg-light text-dark border px-3 py-2 rounded-pill shadow-sm">
                         <i class="bi bi-calendar-check opacity-75 me-1"></i> Conclusão: {{ task.finish_date|date:"d/m/Y" }}

@@ -154,6 +154,8 @@ def task_list(request):
             tasks = tasks.filter(completed=True)
         elif cd.get("completed") == "no":
             tasks = tasks.filter(completed=False)
+        elif cd.get("completed") == "overdue":
+            tasks = tasks.filter(completed=False, deadline__lt=datetime.now().date())
 
     page_obj = pagination(request, tasks, per_page=6)
     categories = Category.objects.filter(author=request.user)

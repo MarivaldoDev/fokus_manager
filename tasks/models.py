@@ -1,4 +1,4 @@
-from time import timezone
+from datetime import datetime
 
 from autoslug import AutoSlugField
 from django.db import models
@@ -53,7 +53,7 @@ class Task(models.Model):
     @property
     def is_overdue(self):
         if self.deadline and not self.completed:
-            return self.deadline < timezone.now()
+            return datetime.now().astimezone() > self.deadline
         return False
 
     def __str__(self):

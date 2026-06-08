@@ -189,7 +189,12 @@ class TaskFilterForm(forms.Form):
     completed = forms.ChoiceField(
         required=False,
         label="Concluída",
-        choices=(("", "Todos"), ("yes", "Concluídas"), ("no", "Não concluídas")),
+        choices=(
+            ("", "Todos"),
+            ("yes", "Concluídas"),
+            ("no", "Não concluídas"),
+            ("overdue", "Atrasadas"),
+        ),
         widget=forms.Select(attrs={"class": "form-control"}),
     )
 

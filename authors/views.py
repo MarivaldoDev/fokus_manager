@@ -35,7 +35,7 @@ class RegisterView(CreateView):
         )
 
         task_welcome_email.delay(
-            form.cleaned_data["username"], form.cleaned_data["email"]
+            username=form.cleaned_data["username"], email=form.cleaned_data["email"]
         )
         return super().form_valid(form)
 

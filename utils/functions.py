@@ -90,7 +90,7 @@ def _build_productivity_chart(task_queryset):
     }
 
 
-def welcome_email(username, email):
+def welcome_email(username, email) -> None:
     subject = "Bem-vindo ao Fokus Manager!"
     dominio = config("DOMAIN_NAME", default="http://localhost:8000")
     login_url = reverse("authors:login")
