@@ -51,7 +51,7 @@ class RegisterUpdateView(UpdateView):
     form_class = UpdateRegisterForm
     success_url = reverse_lazy("tasks:dashboard")
 
-    def get_object(self, queryset: QuerySet | None = None) -> Author:
+    def get_object(self, queryset: QuerySet[Author] | None = None) -> Author:
         return cast(Author, self.request.user)
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
@@ -69,7 +69,7 @@ class RegisterDeleteView(DeleteView):
     template_name = "dashboard.html"
     success_url = reverse_lazy("tasks:home")
 
-    def get_object(self, queryset: QuerySet | None = None) -> Author:
+    def get_object(self, queryset: QuerySet[Author] | None = None) -> Author:
         return cast(Author, self.request.user)
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
