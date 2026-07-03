@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from tasks.decorators.decorator import user_only
@@ -11,14 +12,14 @@ from utils.functions import _build_productivity_chart
 logger = logging.getLogger(__name__)
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     logger.info("Acessando a página inicial.")
     return render(request, "home.html")
 
 
 @login_required(login_url="authors:login")
 @user_only
-def dashboard(request):
+def dashboard(request: HttpRequest) -> HttpResponse:
     user_tasks = Task.objects.filter(author=request.user)
     tasks = user_tasks.aggregate(
         open_count=Count("id", filter=Q(completed=False)),

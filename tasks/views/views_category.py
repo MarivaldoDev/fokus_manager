@@ -1,8 +1,10 @@
 import logging
+from typing import Any
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
+from django.db.models import Count, Q, QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -23,21 +25,21 @@ class CreateCategory(CreateView):
     form_class = CategoryForm
     template_name = "create_category.html"
 
-    def get_form_kwargs(self):
+    def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponse:
         form.instance.author = self.request.user
         messages.success(self.request, "Categoria criada com sucesso!")
         return super().form_valid(form)
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> HttpResponse:
         list_errors(self.request, form)
         return super().form_invalid(form)
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse("tasks:dashboard")
 
 
@@ -51,26 +53,26 @@ class UpdateCategory(UpdateView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: QuerySet[Category] | None = None) -> Category:
         slug = self.kwargs.get(self.slug_url_kwarg)
         return get_object_or_404(Category, slug=slug, author=self.request.user)
 
-    def get_form_kwargs(self):
+    def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> HttpResponse:
         list_errors(self.request, form)
         return super().form_invalid(form)
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponse | HttpResponseRedirect:
         if not form.has_changed():
             return redirect(self.get_success_url())
         messages.success(self.request, "Categoria atualizada com sucesso!")
         return super().form_valid(form)
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse("tasks:dashboard")
 
 
@@ -83,7 +85,7 @@ class DeleteCategory(DeleteView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: QuerySet[Category] | None = None) -> Category:
         slug = self.kwargs.get(self.slug_url_kwarg)
         return get_object_or_404(Category, slug=slug, author=self.request.user)
 
@@ -94,12 +96,12 @@ class DeleteCategory(DeleteView):
 
 @login_required(login_url="authors:login")
 @user_only
-def category_list(request):
+def category_list(request: HttpRequest) -> HttpResponse:
     all_categories = Category.objects.filter(author=request.user)
 
     categories_with_tasks_incomplete = Category.objects.annotate(
         incomplete_count=Count(
-            "tasks", filter=Q(tasks__author=request.user.id, tasks__completed=False)
+            "tasks", filter=Q(tasks__author=request.user.pk, tasks__completed=False)
         )
     ).filter(incomplete_count__gt=0)
 

@@ -11,5 +11,5 @@ class Author(AbstractUser):
         upload_to="author_images/%Y/%m/", blank=True, null=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username

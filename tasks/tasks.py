@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import cast
 
 from celery import shared_task
 from decouple import config
@@ -25,7 +26,7 @@ def task_deadline_billing() -> None:
         send_mail(
             subject="LEMBRE-SE DAS SUAS TAREFAS",
             message="",
-            from_email=config("EMAIL_HOST_USER"),
+            from_email=cast(str, config("EMAIL_HOST_USER")),
             recipient_list=[task.author.email],
             html_message=html_message,
         )

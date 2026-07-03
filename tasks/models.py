@@ -9,7 +9,7 @@ from authors.models import Author
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = AutoSlugField(populate_from="name", always_update=True)
+    slug = AutoSlugField(populate_from="name", always_update=True)  # type: ignore
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="categories"
     )
@@ -18,18 +18,18 @@ class Category(models.Model):
     class Meta:
         unique_together = ("author", "slug")
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
 class Task(models.Model):
     title = models.CharField(max_length=150)
-    slug = AutoSlugField(populate_from="title", always_update=True)
+    slug = AutoSlugField(populate_from="title", always_update=True)  # type: ignore
     description = models.TextField(max_length=300, blank=True, null=True)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="tasks", blank=True, null=True
@@ -45,16 +45,16 @@ class Task(models.Model):
     class Meta:
         unique_together = ("author", "slug")
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     @property
-    def is_overdue(self):
+    def is_overdue(self) -> bool:
         if self.deadline and not self.completed:
             return datetime.now().astimezone() > self.deadline
         return False
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.title} - {'Completed' if self.completed else 'Not Completed'}"

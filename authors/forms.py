@@ -1,3 +1,5 @@
+from typing import Any
+
 from django import forms
 
 from .models import Author
@@ -31,8 +33,11 @@ class RegisterForm(forms.ModelForm):
             ),
         }
 
-    def clean(self):
+    def clean(self) -> dict[str, Any] | None:
         cleaned_data = super().clean()
+        if not cleaned_data:
+            return {}
+
         username = cleaned_data.get("username")
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
@@ -48,7 +53,7 @@ class RegisterForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> Author:
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
@@ -81,7 +86,7 @@ class UpdateRegisterForm(forms.ModelForm):
             ),
         }
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> Author:
         user = super().save(commit=False)
         if commit:
             user.save()

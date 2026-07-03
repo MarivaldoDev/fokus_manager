@@ -4,7 +4,7 @@ from utils.functions import welcome_email
 
 
 @shared_task(name="send_welcome_email")
-def task_welcome_email(username: str, email: str):
+def task_welcome_email(username: str, email: str) -> str:
     welcome_email(username, email)
 
     return email

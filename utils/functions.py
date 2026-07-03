@@ -6,20 +6,23 @@ from datetime import date, timedelta
 from decouple import config
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.core.paginator import Paginator
+from django.core.paginator import Page, Paginator
+from django.db.models import QuerySet
+from django.forms import BaseModelForm, Form
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
 
-def list_errors(request, form):
+def list_errors(request: HttpRequest, form: Form | BaseModelForm) -> None:
     for field, errors in form.errors.items():
         for error in errors:
-            messages.error(request, error)
+            messages.error(request, str(error))
 
 
-def pagination(request, queryset, per_page=5):
+def pagination(request: HttpRequest, queryset: QuerySet, per_page: int = 5) -> Page:
     paginator = Paginator(queryset, per_page)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -54,7 +57,9 @@ def _month_start(reference_date: date, months_back: int) -> date:
     return date(year, month, 1)
 
 
-def _build_productivity_chart(task_queryset):
+def _build_productivity_chart(
+    task_queryset: QuerySet,
+) -> dict[str, dict[str, list[str | int]]]:
     today = timezone.localdate()
     current_week_start = today - timedelta(days=today.weekday())
     weekly_periods = [
@@ -90,7 +95,7 @@ def _build_productivity_chart(task_queryset):
     }
 
 
-def welcome_email(username, email) -> None:
+def welcome_email(username: str, email: str) -> None:
     subject = "Bem-vindo ao Fokus Manager!"
     dominio = config("DOMAIN_NAME", default="http://localhost:8000")
     login_url = reverse("authors:login")

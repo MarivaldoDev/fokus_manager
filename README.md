@@ -24,7 +24,7 @@ Depois crie um arquivo "pytest.ini" na raiz do projeto e faça as configuraçõe
 [pytest]
 DJANGO_SETTINGS_MODULE = <NOME_DO_SEU_PROJETO_DJANGO>.settings
 python_files = test.py tests.py test_*.py tests_*.py *_test.py *_tests.py # Deixar claro quais arquivos o pytest deve procurar
-```
+``
 <br>
 
 # Utilizando

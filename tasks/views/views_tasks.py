@@ -1,8 +1,11 @@
 import logging
 from datetime import datetime
+from typing import Any
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -23,7 +26,7 @@ class CreateTask(CreateView):
     form_class = TaskForm
     template_name = "create_task.html"
 
-    def get_form_kwargs(self):
+    def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
@@ -50,27 +53,28 @@ class UpdateTask(UpdateView):
     template_name = "update_task.html"
     slug_field = "slug"
     slug_url_kwarg = "slug"
+    object: Task
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: QuerySet[Task] | None = None) -> Task:
         slug = self.kwargs.get(self.slug_url_kwarg)
         return get_object_or_404(Task, slug=slug, author=self.request.user)
 
-    def get_form_kwargs(self):
+    def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> HttpResponse:
         list_errors(self.request, form)
         return super().form_invalid(form)
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponseRedirect | HttpResponse:
         if not form.has_changed():
             return redirect(self.get_success_url())
         messages.success(self.request, "Tarefa atualizada com sucesso!")
         return super().form_valid(form)
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return reverse("tasks:task_detail", kwargs={"slug": self.object.slug})
 
 
@@ -83,18 +87,18 @@ class DeleteTask(DeleteView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset: QuerySet[Task] | None = None) -> Task:
         slug = self.kwargs.get(self.slug_url_kwarg)
         return get_object_or_404(Task, slug=slug, author=self.request.user)
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         messages.success(self.request, "Tarefa excluída com sucesso!")
         return reverse("tasks:tasks")
 
 
 @login_required(login_url="authors:login")
 @user_only
-def toggle_task_completed(request, slug: str):
+def toggle_task_completed(request, slug: str) -> HttpResponseRedirect:
     task = get_object_or_404(Task, slug=slug, author=request.user)
 
     if request.method == "POST":
@@ -107,7 +111,7 @@ def toggle_task_completed(request, slug: str):
 
 @login_required(login_url="authors:login")
 @user_only
-def tasks_by_category(request, slug: str):
+def tasks_by_category(request: HttpRequest, slug: str) -> HttpResponse:
     category = get_object_or_404(Category, author=request.user, slug=slug)
     tasks = Task.objects.filter(author=request.user, category=category)
 
@@ -136,7 +140,7 @@ def tasks_by_category(request, slug: str):
 
 @login_required(login_url="authors:login")
 @user_only
-def task_list(request):
+def task_list(request: HttpRequest) -> HttpResponse:
     tasks = Task.objects.filter(author=request.user).order_by("start_date")
 
     filter_form = TaskFilterForm(request.GET or None, user=request.user)
@@ -169,6 +173,6 @@ def task_list(request):
 
 @login_required(login_url="authors:login")
 @user_only
-def task_detail(request, slug: str):
+def task_detail(request: HttpRequest, slug: str) -> HttpResponse:
     task = get_object_or_404(Task, author=request.user, slug=slug)
     return render(request, "task_detail.html", {"task": task})

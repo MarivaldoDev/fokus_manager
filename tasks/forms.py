@@ -1,4 +1,8 @@
+from typing import Any, cast
+
 from django import forms
+
+from authors.models import Author
 
 from .models import Category, Task
 
@@ -47,16 +51,20 @@ class TaskForm(forms.ModelForm):
             ),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+        category_field = cast(forms.ModelChoiceField, self.fields["category"])
         if self.user is None or not getattr(self.user, "is_authenticated", False):
-            self.fields["category"].queryset = Category.objects.none()
+            category_field.queryset = Category.objects.none()
         else:
-            self.fields["category"].queryset = Category.objects.filter(author=self.user)
+            category_field.queryset = Category.objects.filter(author=self.user)
 
-    def clean(self):
+    def clean(self) -> dict[str, Any] | None:
         cleaned_data = super().clean()
+        if not cleaned_data:
+            return {}
+
         title = cleaned_data.get("title")
 
         author = self.user or getattr(self.instance, "author", None)
@@ -71,18 +79,18 @@ class TaskForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, commit=True):
-        task = super().save(commit=False)
+    def save(self, commit: bool = True) -> Task:
+        task: Task = super().save(commit=False)
         if getattr(self, "user", None) and not getattr(task, "author", None):
-            task.author = self.user
+            task.author = cast(Author, self.user)
         if commit:
             task.save()
         return task
 
 
 class TaskUpdateForm(TaskForm):
-    def save(self, commit=True):
-        task = super().save(commit=False)
+    def save(self, commit: bool = True) -> Task:
+        task: Task = super().save(commit=False)
         if commit:
             task.save()
         return task
@@ -105,8 +113,11 @@ class CategoryForm(forms.ModelForm):
         self.user = user
         super().__init__(*args, **kwargs)
 
-    def clean(self):
+    def clean(self) -> dict[str, Any] | None:
         cleaned_data = super().clean()
+        if not cleaned_data:
+            return {}
+
         name = cleaned_data.get("name")
 
         if not name:
@@ -129,18 +140,18 @@ class CategoryForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, commit=True):
-        category = super().save(commit=False)
+    def save(self, commit: bool = True) -> Category:
+        category: Category = super().save(commit=False)
         if getattr(self, "user", None) and not getattr(category, "author", None):
-            category.author = self.user
+            category.author = cast(Author, self.user)
         if commit:
             category.save()
         return category
 
 
 class CategoryUpdateForm(CategoryForm):
-    def save(self, commit=True):
-        category = super().save(commit=False)
+    def save(self, commit: bool = True) -> Category:
+        category: Category = super().save(commit=False)
         if commit:
             category.save()
         return category
@@ -198,10 +209,11 @@ class TaskFilterForm(forms.Form):
         widget=forms.Select(attrs={"class": "form-control"}),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+        category_field = cast(forms.ModelChoiceField, self.fields["category"])
         if user and getattr(user, "is_authenticated", False):
-            self.fields["category"].queryset = Category.objects.filter(author=user)
+            category_field.queryset = Category.objects.filter(author=user)
         else:
-            self.fields["category"].queryset = Category.objects.none()
+            category_field.queryset = Category.objects.none()
