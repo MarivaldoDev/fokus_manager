@@ -28,9 +28,7 @@ class TasksViewsTests(TasksTestBase):
 
         response = self.client.get(reverse("tasks:categories"))
         content = response.content.decode("utf-8")
-        response_context_categories = response.context[
-            "categories_with_tasks_incomplete"
-        ]
+        response_context_categories = response.context["categories_with_tasks_incomplete"]
 
         self.assertIn("Category 1", content)
         self.assertNotIn("Category 2", content)
@@ -42,18 +40,12 @@ class TasksViewsTests(TasksTestBase):
 
     def test_tasks_tasks_by_category_view_category_not_found_returns_404(self):
         category = self.make_category()
-        response = self.client.get(
-            reverse(
-                "tasks:tasks_by_category", kwargs={"slug": category.slug + "-invalid"}
-            )
-        )
+        response = self.client.get(reverse("tasks:tasks_by_category", kwargs={"slug": category.slug + "-invalid"}))
         self.assertEqual(response.status_code, 404)
 
     def test_tasks_tasks_by_category_view_loads_tasks(self):
         self.make_task(category_data={"name": "Work"})
-        response = self.client.get(
-            reverse("tasks:tasks_by_category", kwargs={"slug": "work"})
-        )
+        response = self.client.get(reverse("tasks:tasks_by_category", kwargs={"slug": "work"}))
 
         content = response.content.decode("utf-8")
         response_context_tasks = response.context["page_obj"]
@@ -76,9 +68,7 @@ class TasksViewsTests(TasksTestBase):
 
         self.make_task(title="Current Week", completed=True, finish_date=today)
         self.make_task(title="Previous Week", completed=True, finish_date=previous_week)
-        self.make_task(
-            title="Previous Month", completed=True, finish_date=previous_month
-        )
+        self.make_task(title="Previous Month", completed=True, finish_date=previous_month)
 
         response = self.client.get(reverse("tasks:dashboard"))
         chart = response.context["productivity_chart"]
@@ -86,21 +76,14 @@ class TasksViewsTests(TasksTestBase):
         current_week_start - timedelta(weeks=1)
         current_month_start = today.replace(day=1)
         previous_month_start = (current_month_start - timedelta(days=1)).replace(day=1)
-        monthly_counter = Counter(
-            task_date.replace(day=1)
-            for task_date in [today, previous_week, previous_month]
-        )
+        monthly_counter = Counter(task_date.replace(day=1) for task_date in [today, previous_week, previous_month])
 
         self.assertEqual(len(chart["weekly"]["labels"]), 8)
         self.assertEqual(len(chart["monthly"]["labels"]), 6)
         self.assertEqual(chart["weekly"]["data"][-1], 1)
         self.assertEqual(chart["weekly"]["data"][-2], 1)
-        self.assertEqual(
-            chart["monthly"]["data"][-1], monthly_counter[current_month_start]
-        )
-        self.assertEqual(
-            chart["monthly"]["data"][-2], monthly_counter[previous_month_start]
-        )
+        self.assertEqual(chart["monthly"]["data"][-1], monthly_counter[current_month_start])
+        self.assertEqual(chart["monthly"]["data"][-2], monthly_counter[previous_month_start])
 
     def test_tasks_tasks_template_shows_no_tasks_message_when_no_tasks(self):
         response = self.client.get(reverse("tasks:tasks"))
@@ -121,16 +104,12 @@ class TasksViewsTests(TasksTestBase):
 
     def test_tasks_task_detail_view_task_not_found_returns_404(self):
         task = self.make_task()
-        response = self.client.get(
-            reverse("tasks:task_detail", kwargs={"slug": task.slug + "-invalid"})
-        )
+        response = self.client.get(reverse("tasks:task_detail", kwargs={"slug": task.slug + "-invalid"}))
         self.assertEqual(response.status_code, 404)
 
     def test_tasks_task_detail_view_loads_task(self):
         task = self.make_task()
-        response = self.client.get(
-            reverse("tasks:task_detail", kwargs={"slug": task.slug})
-        )
+        response = self.client.get(reverse("tasks:task_detail", kwargs={"slug": task.slug}))
         content = response.content.decode("utf-8")
         response_context_task = response.context["task"]
 
@@ -143,11 +122,7 @@ class TasksViewsTests(TasksTestBase):
 
     def test_tasks_toggle_task_completed_view_task_not_found_returns_404(self):
         task = self.make_task()
-        response = self.client.get(
-            reverse(
-                "tasks:toggle_task_completed", kwargs={"slug": task.slug + "-invalid"}
-            )
-        )
+        response = self.client.get(reverse("tasks:toggle_task_completed", kwargs={"slug": task.slug + "-invalid"}))
         self.assertEqual(response.status_code, 404)
 
     def test_tasks_toggle_task_completed_view_marks_task_as_completed(self):
@@ -162,9 +137,7 @@ class TasksViewsTests(TasksTestBase):
 
     def test_tasks_toggle_task_completed_view_marks_task_as_not_completed(self):
         task = self.make_task(completed=True)
-        response = self.client.post(
-            reverse("tasks:toggle_task_completed", kwargs={"slug": task.slug})
-        )
+        response = self.client.post(reverse("tasks:toggle_task_completed", kwargs={"slug": task.slug}))
         task.refresh_from_db()
 
         self.assertFalse(task.completed)
@@ -174,9 +147,7 @@ class TasksViewsTests(TasksTestBase):
         self,
     ):
         task = self.make_task()
-        response = self.client.get(
-            reverse("tasks:toggle_task_completed", kwargs={"slug": task.slug})
-        )
+        response = self.client.get(reverse("tasks:toggle_task_completed", kwargs={"slug": task.slug}))
         task.refresh_from_db()
 
         self.assertFalse(task.completed)
@@ -202,9 +173,7 @@ class TasksViewsTests(TasksTestBase):
         )
 
         response.content.decode("utf-8")
-        self.assertRedirects(
-            response, reverse("tasks:task_detail", kwargs={"slug": "updated-task"})
-        )
+        self.assertRedirects(response, reverse("tasks:task_detail", kwargs={"slug": "updated-task"}))
 
     def test_tasks_update_tasks_does_not_update_if_no_changes(self):
         task = self.make_task()
@@ -214,28 +183,20 @@ class TasksViewsTests(TasksTestBase):
             data={"title": task.title, "start_date": task.start_date},
         )
 
-        self.assertRedirects(
-            response, reverse("tasks:task_detail", kwargs={"slug": task.slug})
-        )
+        self.assertRedirects(response, reverse("tasks:task_detail", kwargs={"slug": task.slug}))
 
     def test_tasks_delete_tasks_shows_message_confirmation_before_deletion(self):
         task = self.make_task()
 
-        response = self.client.get(
-            reverse("tasks:delete_task", kwargs={"slug": task.slug})
-        )
+        response = self.client.get(reverse("tasks:delete_task", kwargs={"slug": task.slug}))
 
         content = response.content.decode("utf-8")
-        self.assertIn(
-            f'Tem certeza que deseja excluir a tarefa "{task.title}"?', content
-        )
+        self.assertIn(f'Tem certeza que deseja excluir a tarefa "{task.title}"?', content)
 
     def test_tasks_delete_task_redirects_to_tasks_list_after_deletion(self):
         task = self.make_task()
 
-        response = self.client.post(
-            reverse("tasks:delete_task", kwargs={"slug": task.slug})
-        )
+        response = self.client.post(reverse("tasks:delete_task", kwargs={"slug": task.slug}))
 
         self.assertRedirects(response, reverse("tasks:tasks"))
 
@@ -251,12 +212,8 @@ class TasksViewsTests(TasksTestBase):
         self.assertRedirects(response, reverse("authors:login") + "?next=/categories/")
 
         task = self.make_task()
-        response = self.client.get(
-            reverse("tasks:task_detail", kwargs={"slug": task.slug})
-        )
-        self.assertRedirects(
-            response, reverse("authors:login") + f"?next=/tasks/details/{task.slug}/"
-        )
+        response = self.client.get(reverse("tasks:task_detail", kwargs={"slug": task.slug}))
+        self.assertRedirects(response, reverse("authors:login") + f"?next=/tasks/details/{task.slug}/")
 
         response = self.client.post(
             reverse("tasks:toggle_task_completed", kwargs={"slug": task.slug}),
@@ -271,13 +228,7 @@ class TasksViewsTests(TasksTestBase):
             reverse("tasks:update_task", kwargs={"slug": task.slug}),
             data={"title": "Updated Task", "start_date": task.start_date},
         )
-        self.assertRedirects(
-            response, reverse("authors:login") + f"?next=/tasks/update/{task.slug}/"
-        )
+        self.assertRedirects(response, reverse("authors:login") + f"?next=/tasks/update/{task.slug}/")
 
-        response = self.client.post(
-            reverse("tasks:delete_task", kwargs={"slug": task.slug})
-        )
-        self.assertRedirects(
-            response, reverse("authors:login") + f"?next=/tasks/delete/{task.slug}/"
-        )
+        response = self.client.post(reverse("tasks:delete_task", kwargs={"slug": task.slug}))
+        self.assertRedirects(response, reverse("authors:login") + f"?next=/tasks/delete/{task.slug}/")

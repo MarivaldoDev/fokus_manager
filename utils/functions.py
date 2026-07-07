@@ -13,6 +13,8 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils import timezone
 
+from tasks.models import Task
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,7 +24,7 @@ def list_errors(request: HttpRequest, form: Form | BaseModelForm) -> None:
             messages.error(request, str(error))
 
 
-def pagination(request: HttpRequest, queryset: QuerySet, per_page: int = 5) -> Page:
+def pagination(request: HttpRequest, queryset: QuerySet[Task, Task], per_page: int = 5) -> Page[Task]:
     paginator = Paginator(queryset, per_page)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -62,9 +64,7 @@ def _build_productivity_chart(
 ) -> dict[str, dict[str, list[str | int]]]:
     today = timezone.localdate()
     current_week_start = today - timedelta(days=today.weekday())
-    weekly_periods = [
-        current_week_start - timedelta(weeks=offset) for offset in range(7, -1, -1)
-    ]
+    weekly_periods = [current_week_start - timedelta(weeks=offset) for offset in range(7, -1, -1)]
     monthly_periods = [_month_start(today, offset) for offset in range(5, -1, -1)]
 
     completed_dates = task_queryset.values_list("finish_date", flat=True)
@@ -86,10 +86,7 @@ def _build_productivity_chart(
             "data": [weekly_counter.get(period, 0) for period in weekly_periods],
         },
         "monthly": {
-            "labels": [
-                f"{MONTH_LABELS[period.month - 1]}/{period.year}"
-                for period in monthly_periods
-            ],
+            "labels": [f"{MONTH_LABELS[period.month - 1]}/{period.year}" for period in monthly_periods],
             "data": [monthly_counter.get(period, 0) for period in monthly_periods],
         },
     }

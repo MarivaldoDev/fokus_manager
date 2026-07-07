@@ -29,9 +29,7 @@ class TaskForm(forms.ModelForm):
         }
 
         widgets = {
-            "title": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Título da tarefa"}
-            ),
+            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Título da tarefa"}),
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
@@ -40,15 +38,9 @@ class TaskForm(forms.ModelForm):
                 }
             ),
             "category": forms.Select(attrs={"class": "form-control"}),
-            "start_date": forms.DateInput(
-                format="%Y-%m-%d", attrs={"class": "form-control", "type": "date"}
-            ),
-            "deadline": forms.DateTimeInput(
-                format="%Y-%m-%d", attrs={"class": "form-control", "type": "date"}
-            ),
-            "image": forms.FileInput(
-                attrs={"class": "form-control-file", "accept": "image/*"}
-            ),
+            "start_date": forms.DateInput(format="%Y-%m-%d", attrs={"class": "form-control", "type": "date"}),
+            "deadline": forms.DateTimeInput(format="%Y-%m-%d", attrs={"class": "form-control", "type": "date"}),
+            "image": forms.FileInput(attrs={"class": "form-control-file", "accept": "image/*"}),
         }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -70,11 +62,7 @@ class TaskForm(forms.ModelForm):
         author = self.user or getattr(self.instance, "author", None)
 
         if author and title:
-            if (
-                Task.objects.filter(title=title, author=author)
-                .exclude(pk=self.instance.pk)
-                .exists()
-            ):
+            if Task.objects.filter(title=title, author=author).exclude(pk=self.instance.pk).exists():
                 raise forms.ValidationError("Essa tarefa já existe.")
 
         return cleaned_data
@@ -103,11 +91,7 @@ class CategoryForm(forms.ModelForm):
         labels = {
             "name": "Nome",
         }
-        widgets = {
-            "name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Nome da categoria"}
-            )
-        }
+        widgets = {"name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nome da categoria"})}
 
     def __init__(self, *args, user=None, **kwargs):
         self.user = user
@@ -123,19 +107,11 @@ class CategoryForm(forms.ModelForm):
         if not name:
             raise forms.ValidationError("O nome da categoria é obrigatório.")
 
-        author = (
-            self.user
-            or getattr(self.instance, "author", None)
-            or getattr(self.instance, "author_id", None)
-        )
+        author = self.user or getattr(self.instance, "author", None) or getattr(self.instance, "author_id", None)
         if not author:
             raise forms.ValidationError("Usuário inválido.")
 
-        if (
-            Category.objects.filter(name=name, author=author)
-            .exclude(pk=self.instance.pk)
-            .exists()
-        ):
+        if Category.objects.filter(name=name, author=author).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("Essa categoria já existe.")
 
         return cleaned_data
@@ -167,9 +143,7 @@ class TaskFilterForm(forms.Form):
     title = forms.CharField(
         required=False,
         label="Título",
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Título"}
-        ),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Título"}),
     )
     start_date_from = forms.DateField(
         required=False,

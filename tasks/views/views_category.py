@@ -43,9 +43,7 @@ class CreateCategory(CreateView):
         return reverse("tasks:dashboard")
 
 
-@method_decorator(
-    [login_required(login_url="authors:login"), user_only], name="dispatch"
-)
+@method_decorator([login_required(login_url="authors:login"), user_only], name="dispatch")
 class UpdateCategory(UpdateView):
     model = Category
     form_class = CategoryUpdateForm
@@ -76,9 +74,7 @@ class UpdateCategory(UpdateView):
         return reverse("tasks:dashboard")
 
 
-@method_decorator(
-    [login_required(login_url="authors:login"), user_only], name="dispatch"
-)
+@method_decorator([login_required(login_url="authors:login"), user_only], name="dispatch")
 class DeleteCategory(DeleteView):
     model = Category
     template_name = "categories.html"
@@ -100,9 +96,7 @@ def category_list(request: HttpRequest) -> HttpResponse:
     all_categories = Category.objects.filter(author=request.user)
 
     categories_with_tasks_incomplete = Category.objects.annotate(
-        incomplete_count=Count(
-            "tasks", filter=Q(tasks__author=request.user.pk, tasks__completed=False)
-        )
+        incomplete_count=Count("tasks", filter=Q(tasks__author=request.user.pk, tasks__completed=False))
     ).filter(incomplete_count__gt=0)
 
     # Determina qual filtro aplicar

@@ -44,9 +44,7 @@ class CreateTask(CreateView):
         return reverse("tasks:tasks")
 
 
-@method_decorator(
-    [login_required(login_url="authors:login"), user_only], name="dispatch"
-)
+@method_decorator([login_required(login_url="authors:login"), user_only], name="dispatch")
 class UpdateTask(UpdateView):
     model = Task
     form_class = TaskUpdateForm
@@ -78,9 +76,7 @@ class UpdateTask(UpdateView):
         return reverse("tasks:task_detail", kwargs={"slug": self.object.slug})
 
 
-@method_decorator(
-    [login_required(login_url="authors:login"), user_only], name="dispatch"
-)
+@method_decorator([login_required(login_url="authors:login"), user_only], name="dispatch")
 class DeleteTask(DeleteView):
     model = Task
     template_name = "task_detail.html"

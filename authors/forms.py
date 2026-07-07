@@ -16,21 +16,15 @@ class RegisterForm(forms.ModelForm):
             "password": "Senha",
         }
         widgets = {
-            "username": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Seu nome de usuário"}
-            ),
-            "email": forms.EmailInput(
-                attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}
-            ),
+            "username": forms.TextInput(attrs={"class": "form-control", "placeholder": "Seu nome de usuário"}),
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}),
             "image_profile": forms.FileInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "Selecione sua imagem de perfil",
                 }
             ),
-            "password": forms.PasswordInput(
-                attrs={"class": "form-control", "placeholder": "Crie sua senha"}
-            ),
+            "password": forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Crie sua senha"}),
         }
 
     def clean(self) -> dict[str, Any] | None:
@@ -72,12 +66,8 @@ class UpdateRegisterForm(forms.ModelForm):
             "image_profile": "Imagem de Perfil",
         }
         widgets = {
-            "username": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Seu nome de usuário"}
-            ),
-            "email": forms.EmailInput(
-                attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}
-            ),
+            "username": forms.TextInput(attrs={"class": "form-control", "placeholder": "Seu nome de usuário"}),
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}),
             "image_profile": forms.FileInput(
                 attrs={
                     "class": "form-control",

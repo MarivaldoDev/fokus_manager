@@ -26,11 +26,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         completed_count=Count("id", filter=Q(completed=True)),
     )
 
-    categories_with_open_count = (
-        Category.objects.filter(author=request.user, tasks__completed=False)
-        .distinct()
-        .count()
-    )
+    categories_with_open_count = Category.objects.filter(author=request.user, tasks__completed=False).distinct().count()
 
     recents_tasks = user_tasks.order_by("-created_at")[:5]
     completed_tasks = user_tasks.filter(completed=True, finish_date__isnull=False)

@@ -1,3 +1,5 @@
+from typing import override
+
 from django.test import TestCase
 from django.utils import timezone
 
@@ -24,6 +26,7 @@ class TasksTestBase(TestCase):
     def make_user(self, username="user", password="123456"):
         return Author.objects.create(username=username, password=password)
 
+    @override
     def make_task(
         self,
         title="Task 1",
@@ -57,7 +60,5 @@ class TasksTestBase(TestCase):
             author=author_obj,
             start_date=start_date,
             completed=completed,
-            finish_date=finish_date
-            if finish_date is not None
-            else (timezone.localdate() if completed else None),
+            finish_date=finish_date if finish_date is not None else (timezone.localdate() if completed else None),
         )

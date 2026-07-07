@@ -73,9 +73,7 @@ class RegisterDeleteView(DeleteView):
         return cast(Author, self.request.user)
 
     def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        messages.success(
-            self.request, "Seu perfil foi deletado com sucesso! Sentiremos sua falta."
-        )
+        messages.success(self.request, "Seu perfil foi deletado com sucesso! Sentiremos sua falta.")
         return super().delete(request, *args, **kwargs)
 
 

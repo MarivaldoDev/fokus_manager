@@ -18,12 +18,11 @@ class AuthorsLoginFormFunctionalTest(AuthorsBaseFuncionalTest):
         password.send_keys("12345")
         password.send_keys(Keys.ENTER)
 
-        message_erro = WebDriverWait(self.browser, 10).until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "alert"))
-        )
+        message_erro = WebDriverWait(self.browser, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "alert")))
 
         self.assertIn(
-            "Por favor, entre com um usuário e senha corretos. Note que ambos os campos diferenciam maiúsculas e minúsculas.",
+            "Por favor, entre com um usuário e senha corretos. "
+            "Note que ambos os campos diferenciam maiúsculas e minúsculas.",
             message_erro.text,
         )
 

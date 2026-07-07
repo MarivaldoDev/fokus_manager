@@ -61,9 +61,7 @@ class AuthorsViewsTests(AuthorsTestBase):
         content = response.content.decode("utf-8")
 
         self.assertIn("Redefinição de senha enviada", content)
-        self.assertTemplateUsed(
-            response, "authors/registration/password_reset_done.html"
-        )
+        self.assertTemplateUsed(response, "authors/registration/password_reset_done.html")
 
     def test_authors_reset_done_view_view_function_is_correct(self):
         view = resolve(reverse("authors:password_reset_done"))

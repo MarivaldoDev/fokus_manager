@@ -7,9 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class Author(AbstractUser):
-    image_profile = models.ImageField(
-        upload_to="author_images/%Y/%m/", blank=True, null=True
-    )
+    image_profile = models.ImageField(upload_to="author_images/%Y/%m/", blank=True, null=True)
 
     def __str__(self) -> str:
         return self.username

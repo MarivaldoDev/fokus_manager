@@ -10,6 +10,4 @@ class AuthorsTestBase(TestCase):
         return super().setUp()
 
     def make_user(self, username="user", password="123456Test", **kwargs):
-        return Author.objects.create_user(
-            username=username, password=password, **kwargs
-        )
+        return Author.objects.create_user(username=username, password=password, **kwargs)
