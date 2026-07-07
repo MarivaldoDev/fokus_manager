@@ -1,5 +1,3 @@
-from typing import override
-
 from django.test import TestCase
 from django.utils import timezone
 
@@ -26,8 +24,7 @@ class TasksTestBase(TestCase):
     def make_user(self, username="user", password="123456"):
         return Author.objects.create(username=username, password=password)
 
-    @override
-    def make_task(
+    def make_task(  # noqa: PLR0913
         self,
         title="Task 1",
         description="Description for Task 1",
