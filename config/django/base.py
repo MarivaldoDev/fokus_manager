@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
+    "silk",
     "django_celery_results",
     "django_celery_beat",
     "tasks",
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     "config.middleware.AdminStaffOnlyMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -119,7 +121,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-LOGGING = LOGGING
+LOGGING = LOGGING  # noqa: PLW0127
 AUTH_USER_MODEL = "authors.Author"
 
 DEFAULT_FROM_EMAIL = "teamfokusmanager@gmail.com"
